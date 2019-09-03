@@ -12,6 +12,7 @@ class Calculator extends React.Component {
       dispVal: '',
     };
   }
+  
   render() {
     return(
       <div className="row m-5">

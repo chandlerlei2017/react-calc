@@ -50,7 +50,10 @@ class Calculator extends React.Component {
         availDots: 1,
       });
     }
-    else if ( i === '=' && this.state.operatorCount === 0) {
+    else if ( i === '=' && this.state.dispVal.length === 0)  {
+      return;
+    }
+    else if ( i === '=' && this.state.operatorCount === 0 ) {
       const res = CalculateExpression(this.state.dispVal);
       this.setState({
         dispVal: res,

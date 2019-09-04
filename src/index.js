@@ -66,7 +66,7 @@ class Calculator extends React.Component {
   }
 
   ParenHandleClick(i) {
-    if ( i === ')' && this.state.openBrackets === 0 ) {
+    if ( i === ')' && (this.state.openBrackets === 0 || this.state.dispVal.slice(-1) === '(')) {
       return;
     }
     else if ( i === ')' ) {
@@ -88,11 +88,23 @@ class Calculator extends React.Component {
     if (this.state.dispVal.length === 0) {
       return;
     }
-    else if (this.state.dispVal.slice(-1) === ' '){
-      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 3);
+
+    var temp = this.state.dispVal.slice(0, this.state.dispVal.length - 1);
+
+    if (this.state.dispVal.slice(-1) === ' ') {
       this.setState({
-        dispVal: temp,
         operatorCount: 0,
+      });
+      temp = this.state.dispVal.slice(0, this.state.dispVal.length - 3);
+    }
+    else if (this.state.dispVal.slice(-1) === '(') {
+      this.setState({
+        openBrackets: this.state.openBrackets - 1,
+      });
+    }
+    else if (this.state.dispVal.slice(-1) === ')') {
+      this.setState({
+        openBrackets: this.state.openBrackets + 1,
       });
     }
     else {
@@ -101,11 +113,12 @@ class Calculator extends React.Component {
           availDots: 1,
         });
       }
-      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 1);
-      this.setState({
-        dispVal: temp,
-      });
+      temp = this.state.dispVal.slice(0, this.state.dispVal.length - 1);
     }
+
+    this.setState({
+      dispVal: temp,
+    });
   }
 
   render() {

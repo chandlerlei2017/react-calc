@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
+import { create, all } from 'mathjs'
 
+const math = create(all);
 const arith = [ '+', '-', '*', '/'];
 
 class Calculator extends React.Component {
@@ -13,29 +15,50 @@ class Calculator extends React.Component {
       currVal: 0,
       dispVal: '',
       operatorCount: 0,
+      availDots: 1,
     };
   }
 
   NumberHandleClick(i) {
-     this.setState({
-       dispVal: this.state.dispVal + i,
-       operatorCount: 0,
-     });
+    if (i === "." && this.state.availDots < 1) {
+      return;
+    }
+    else if (i === ".") {
+      this.setState({
+        availDots: this.state.availDots - 1,
+      });
+    }
+    this.setState({
+      dispVal: this.state.dispVal + i,
+      operatorCount: 0,
+    });
   }
 
   OperatorHandleClick(i) {
     if( this.state.operatorCount < 1 && arith.includes(i)) {
       this.setState({
         operatorCount: this.state.operatorCount + 1,
-        dispVal: `${this.state.dispVal} ${i} `
+        dispVal: `${this.state.dispVal} ${i} `,
+        availDots: 1,
       });
     }
 
-    if( i == 'CC') {
+    if( i === 'CC') {
       this.setState({
         dispVal: '',
         operatorCount: 0,
+        availDots: 1,
       });
+    }
+    else if ( i === '=' && this.state.operatorCount === 0) {
+      const res = CalculateExpression(this.state.dispVal);
+      this.setState({
+        dispVal: res,
+      });
+    }
+
+    else {
+      return;
     }
   }
 
@@ -159,6 +182,9 @@ class Display extends React.Component {
   }
 }
 
+function CalculateExpression(expr) {
+  return math.evaluate(expr);
+}
 
 ReactDOM.render(
   <Calculator />,

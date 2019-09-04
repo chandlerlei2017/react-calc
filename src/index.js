@@ -10,9 +10,25 @@ class Calculator extends React.Component {
     this.state = {
       currVal: 0,
       dispVal: '',
+      operatorCount: 0,
     };
   }
-  
+
+  NumberHandleClick(i) {
+     this.setState({
+       dispVal: this.state.dispVal + i
+     });
+  }
+
+  OperatorHandleClick(i) {
+    if( this.state.operatorCount < 1 ) {
+      this.setState({
+        operatorCount: this.state.operatorCount + 1,
+        dispVal: `${this.state.dispVal} ${i} `
+      });
+    }
+  }
+
   render() {
     return(
       <div className="row m-5">
@@ -22,10 +38,14 @@ class Calculator extends React.Component {
           />
         </div>
         <div className="col-sm-8">
-          <NumberGroup />
+          <NumberGroup 
+            onClick = {i => this.NumberHandleClick(i)}
+          />
         </div>
         <div className="col-sm-4">
-          <OperatorGroup />
+          <OperatorGroup 
+            onClick = {i => this.OperatorHandleClick(i)}
+          />
         </div>
       </div>
     );
@@ -37,6 +57,7 @@ class NumberGroup extends React.Component {
     return(
       <Number
         value={i}
+        onClick={() => this.props.onClick(i)}
       />
     );
   }
@@ -69,7 +90,7 @@ class NumberGroup extends React.Component {
 class Number extends React.Component {
   render() {
     return(
-      <div className = "btn btn-primary btn-block" > { this.props.value } </div>
+      <div className = "btn btn-primary btn-block" onClick={() => this.props.onClick() }> { this.props.value } </div>
     );
   }
 }
@@ -79,6 +100,7 @@ class OperatorGroup extends React.Component {
     return(
       <Operator
         value={i}
+        onClick = {() => this.props.onClick(i)}
       />
     );
   }
@@ -112,7 +134,7 @@ class OperatorGroup extends React.Component {
 class Operator extends React.Component {
   render() {
     return(
-      <div className = "btn btn-primary btn-block mb-2" > { this.props.value } </div>
+      <div className = "btn btn-primary btn-block mb-2" onClick={() => this.props.onClick()}> { this.props.value } </div>
     );
   }
 }

@@ -4,6 +4,8 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 
+const arith = [ '+', '-', '*', '/'];
+
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
@@ -16,15 +18,23 @@ class Calculator extends React.Component {
 
   NumberHandleClick(i) {
      this.setState({
-       dispVal: this.state.dispVal + i
+       dispVal: this.state.dispVal + i,
+       operatorCount: 0,
      });
   }
 
   OperatorHandleClick(i) {
-    if( this.state.operatorCount < 1 ) {
+    if( this.state.operatorCount < 1 && arith.includes(i)) {
       this.setState({
         operatorCount: this.state.operatorCount + 1,
         dispVal: `${this.state.dispVal} ${i} `
+      });
+    }
+
+    if( i == 'CC') {
+      this.setState({
+        dispVal: '',
+        operatorCount: 0,
       });
     }
   }

@@ -12,9 +12,8 @@ class Calculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currVal: 0,
       dispVal: '',
-      operatorCount: 0,
+      operatorCount: 1,
       availDots: 1,
     };
   }

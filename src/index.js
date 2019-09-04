@@ -66,7 +66,22 @@ class Calculator extends React.Component {
   }
 
   ParenHandleClick(i) {
-
+    if ( i === ')' && this.state.openBrackets === 0 ) {
+      return;
+    }
+    else if ( i === ')' ) {
+      this.setState({
+        openBrackets: this.state.openBrackets - 1,
+      });
+    }
+    else {
+      this.setState({
+        openBrackets: this.state.openBrackets + 1,
+      });
+    }
+    this.setState({
+      dispVal: this.state.dispVal + i,
+    });
   }
 
   DelHandleClick(i) {

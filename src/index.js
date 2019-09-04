@@ -15,34 +15,11 @@ class Calculator extends React.Component {
       dispVal: '',
       operatorCount: 1,
       availDots: 1,
+      openBrackets: 0,
     };
   }
 
   NumberHandleClick(i) {
-    if (i === 'DEL' && this.state.dispVal.length === 0) {
-      return;
-    }
-    else if (i === 'DEL' && this.state.dispVal.slice(-1) === ' '){
-      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 3);
-      this.setState({
-        dispVal: temp,
-        operatorCount: 0,
-      });
-      return;
-    }
-    else if (i === 'DEL') {
-      if (this.state.dispVal.slice(-1) === '.') {
-        this.setState({
-          availDots: 1,
-        });
-      }
-      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 1);
-      this.setState({
-        dispVal: temp,
-      });
-      return;
-    }
-
     if (i === '.' && this.state.availDots < 1) {
       return;
     }
@@ -85,6 +62,34 @@ class Calculator extends React.Component {
     }
   }
 
+  ParenHandleClick(i) {
+
+  }
+
+  DelHandleClick(i) {
+    if (this.state.dispVal.length === 0) {
+      return;
+    }
+    else if (this.state.dispVal.slice(-1) === ' '){
+      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 3);
+      this.setState({
+        dispVal: temp,
+        operatorCount: 0,
+      });
+    }
+    else {
+      if (this.state.dispVal.slice(-1) === '.') {
+        this.setState({
+          availDots: 1,
+        });
+      }
+      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 1);
+      this.setState({
+        dispVal: temp,
+      });
+    }
+  }
+
   render() {
     return(
       <div className="row m-5">
@@ -95,12 +100,14 @@ class Calculator extends React.Component {
         </div>
         <div className="col-sm-8">
           <NumberGroup 
-            onClick = {i => this.NumberHandleClick(i)}
+            onClickNumber = {i => this.NumberHandleClick(i)}
+            onClickDel = {i => this.DelHandleClick(i)}
           />
         </div>
         <div className="col-sm-4">
           <OperatorGroup 
-            onClick = {i => this.OperatorHandleClick(i)}
+            onClickOperator = {i => this.OperatorHandleClick(i)}
+            onClickParen = {i => this.ParenHandleClick(i)}
           />
         </div>
       </div>
@@ -110,10 +117,18 @@ class Calculator extends React.Component {
 
 class NumberGroup extends React.Component {
   renderNumber(i){
+    if(i === 'DEL') {
+      return(
+        <Number
+          value={i}
+          onClick={() => this.props.onClickDel(i)}
+        />
+      );
+    }
     return(
       <Number
         value={i}
-        onClick={() => this.props.onClick(i)}
+        onClick={() => this.props.onClickNumber(i)}
       />
     );
   }
@@ -153,10 +168,19 @@ class Number extends React.Component {
 
 class OperatorGroup extends React.Component {
   renderOperator(i){
+    if (i === '(' || i ===')') {
+      return(
+        <Operator
+          value={i}
+          onClick = {() => this.props.onClickParen(i) }
+        />
+      );
+    }
+
     return(
       <Operator
         value={i}
-        onClick = {() => this.props.onClick(i)}
+        onClick = {() => this.props.onClickOperator(i) }
       />
     );
   }
@@ -164,8 +188,11 @@ class OperatorGroup extends React.Component {
   render() {
     return (
       <div className="row">
-        <div className="col-sm-12">
-          {this.renderOperator('CC')}
+        <div className="col-sm-6">
+          {this.renderOperator('(')}
+        </div>
+        <div className="col-sm-6">
+          {this.renderOperator(')')}
         </div>
         <div className="col-sm-6">
           {this.renderOperator('+')}
@@ -178,8 +205,11 @@ class OperatorGroup extends React.Component {
         </div>      
         <div className="col-sm-6">
           {this.renderOperator('/')}
-        </div>      
-        <div className="col-sm-12">
+        </div>  
+        <div className="col-sm-6">
+          {this.renderOperator('CC')}
+        </div>
+        <div className="col-sm-6">
           {this.renderOperator('=')}
         </div>            
       </div>
@@ -206,7 +236,7 @@ class Display extends React.Component {
 }
 
 function CalculateExpression(expr) {
-  return math.evaluate(expr);
+  return String(math.evaluate(expr));
 }
 
 ReactDOM.render(

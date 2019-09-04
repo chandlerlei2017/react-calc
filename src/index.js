@@ -19,10 +19,34 @@ class Calculator extends React.Component {
   }
 
   NumberHandleClick(i) {
-    if (i === "." && this.state.availDots < 1) {
+    if (i === 'DEL' && this.state.dispVal.length === 0) {
       return;
     }
-    else if (i === ".") {
+    else if (i === 'DEL' && this.state.dispVal.slice(-1) === ' '){
+      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 3);
+      this.setState({
+        dispVal: temp,
+        operatorCount: 0,
+      });
+      return;
+    }
+    else if (i === 'DEL') {
+      if (this.state.dispVal.slice(-1) === '.') {
+        this.setState({
+          availDots: 1,
+        });
+      }
+      const temp = this.state.dispVal.slice(0, this.state.dispVal.length - 1);
+      this.setState({
+        dispVal: temp,
+      });
+      return;
+    }
+
+    if (i === '.' && this.state.availDots < 1) {
+      return;
+    }
+    else if (i === '.') {
       this.setState({
         availDots: this.state.availDots - 1,
       });

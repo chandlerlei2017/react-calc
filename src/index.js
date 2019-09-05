@@ -29,18 +29,23 @@ class Calculator extends React.Component {
       });
     }
     this.setState({
-      dispVal: this.state.dispVal + i,
       operatorCount: 0,
     });
+    this.setState( (state) => ({
+      dispVal: state.dispVal + i,
+    }));
   }
 
   OperatorHandleClick(i) {
     if( this.state.operatorCount < 1 && arith.includes(i)) {
       this.setState({
-        operatorCount: this.state.operatorCount + 1,
-        dispVal: `${this.state.dispVal} ${i} `,
         availDots: 1,
       });
+
+      this.setState ((state) => ({
+        operatorCount: state.operatorCount + 1,
+        dispVal: `${state.dispVal} ${i} `,
+      }));
     }
 
     if( i === 'CC') {
@@ -70,18 +75,18 @@ class Calculator extends React.Component {
       return;
     }
     else if ( i === ')' ) {
-      this.setState({
-        openBrackets: this.state.openBrackets - 1,
-      });
+      this.setState( (state) => ({
+        openBrackets: state.openBrackets - 1,
+      }));
     }
     else {
-      this.setState({
-        openBrackets: this.state.openBrackets + 1,
-      });
+      this.setState( (state) => ({
+        openBrackets: state.openBrackets + 1,
+      }));
     }
-    this.setState({
-      dispVal: this.state.dispVal + i,
-    });
+    this.setState( (state) => ({
+      dispVal: state.dispVal + i,
+    }));
   }
 
   DelHandleClick(i) {
@@ -98,14 +103,14 @@ class Calculator extends React.Component {
       temp = this.state.dispVal.slice(0, this.state.dispVal.length - 3);
     }
     else if (this.state.dispVal.slice(-1) === '(') {
-      this.setState({
-        openBrackets: this.state.openBrackets - 1,
-      });
+      this.setState((state) => ({
+        openBrackets: state.openBrackets - 1,
+      }));
     }
     else if (this.state.dispVal.slice(-1) === ')') {
-      this.setState({
-        openBrackets: this.state.openBrackets + 1,
-      });
+      this.setState( (state) => ({
+        openBrackets: state.openBrackets + 1,
+      }));
     }
     else {
       if (this.state.dispVal.slice(-1) === '.') {
